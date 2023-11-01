@@ -102,7 +102,7 @@ names(df)
 ```
 
 
-# Outcomes
+# Outcomes graphs
 
 
 ```{r}
@@ -144,32 +144,43 @@ print(p)
 ```
 
 
+# Outcomes Odds Ratio
 
 ```{r}
 
 
-library(tidyr)
+library(epitools)
 
 
-long_data <- df[, c("Disurie, preoperator", "Disurie,3 luni",
-               "Disurie, 6 luni", "Disurie, 12 luni", "Tratament chirurgical")] %>%
-  pivot_longer(
-  cols = starts_with("Disurie"),
-  names_to = "Disurie",
-  values_to = "Value"
+for (i in names(df[, 66:93])  ) {
+  
+  var <- i
+  print('______________________________________________________________')
+  print(var)
+  
+  if (table(df[[var]])['Nu'] != 84) {
+    
+    contingency_table <- table(df$"Tratament chirurgical", df[[var]])
+    print(oddsratio.fisher(contingency_table, rev = c("both"))$measure)
+    
+  }
+  
+}
+
+# Sample data frame with a column
+data <- data.frame(
+  ID = 1:5,
+  Value = c(5, 5, 5, 5, 5)
 )
 
-#long_data
+# Check if the 'Value' column is constant
+is_constant <- all(data$Value == data$Value[1])
 
-ggplot(long_data, aes(x = Disurie, y = Value)) +
-  geom_bar(
-    aes(y = ..prop.., group = 1),
-    stat = "identity", color = "white",
-    position = position_dodge(0.9)
-    )+
-  facet_wrap(~'Tratament chirurgical')
-
-
+if (is_constant) {
+  cat("The 'Value' column is constant.\n")
+} else {
+  cat("The 'Value' column is not constant.\n")
+}
 
 
 
