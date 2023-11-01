@@ -1,0 +1,183 @@
+---
+title: "Plesacov"
+author: "Oleg Arnaut"
+date: "2023-10-31"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, error = FALSE, message = TRUE)
+
+knitr::opts_chunk$set(dpi=300) 
+knitr::opts_chunk$set(fig.width=7, fig.height=5) 
+
+library(tidyverse)
+library(forcats)
+library(readxl)
+library(openxlsx)
+library(flextable)
+library(dplyr)
+library(gtsummary)
+library(smd)
+
+
+library(ggstatsplot)
+
+# Define a function for grouped boxplots with nonparametric statistics
+create_grouped_boxplot <- function(data, x_var, y_var, x_name, y_name) {
+  plt <- ggbetweenstats(
+    data = data,
+    x = {{ x_var }},
+    y = {{ y_var }},
+    type = "nonparametric"
+  )
+
+  plt <- plt + 
+    labs(
+      x = x_name,
+      y = y_name,
+      #title = paste("Distribution of", quo_name(y_var), "by", quo_name(x_var))
+    ) + 
+    theme(
+      text = element_text(family = "Roboto", size = 8, color = "black"),
+      plot.title = element_text(
+        family = "Lobster Two", 
+        size = 12,
+        face = "bold",
+        color = "#2a475e"
+      ),
+      plot.subtitle = element_text(
+        family = "Roboto", 
+        size = 12, 
+        face = "bold",
+        color = "#1b2838"
+      ),
+      plot.title.position = "plot",
+      axis.text = element_text(size = 10, color = "black"),
+      axis.title = element_text(size = 12)
+    )
+
+  plt <- plt  +
+    #ylim(0, max(data$y_var) + 5)+
+    theme(
+      axis.ticks = element_blank(),
+      axis.line = element_line(colour = "grey50"),
+      panel.grid = element_line(color = "#b4aea9"),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.major.y = element_line(linetype = "dashed"),
+      panel.background = element_rect(fill = "#fbf9f4", color = "#fbf9f4"),
+      plot.background = element_rect(fill = "#fbf9f4", color = "#fbf9f4")
+    )
+  
+  return(plt)
+}
+
+```
+
+
+
+# Dataset formation
+
+```{r}
+
+
+df <- read_excel("Baza de date Plesacov TURP.xlsx")
+
+
+df %>% select(!c("Nr.", "Cod")) -> df 
+  
+
+# Identify character variables
+character_vars <- sapply(df, is.character)
+
+# Convert character variables to factors
+df[character_vars] <- lapply(df[character_vars], as.factor)
+
+names(df)
+
+```
+
+
+# Outcomes
+
+
+```{r}
+# https://indrajeetpatil.github.io/ggstatsplot/index.html
+
+# names(df[, 66:93])      
+
+for (i in names(df[, 66:93])  ) {
+  
+p <- ggbarstats(df, x = "Tratament chirurgical", y = {{ i }})
+
+p <- p +
+  theme(
+    text = element_text(family = "Roboto", size = 14, color = "black"),
+    plot.title = element_text(
+      family = "Lobster Two",
+      size = 12,
+      face = "bold",
+      color = "#2a475e"
+    ),
+    plot.subtitle = element_text(
+      family = "Roboto",
+      size = 12,
+      face = "bold",
+      color = "#1b2838"
+    ),
+    plot.title.position = "plot",
+    axis.text = element_text(size = 10, color = "black"),
+    axis.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 12)
+  )
+
+print(p)
+
+}
+
+
+```
+
+
+
+```{r}
+
+
+library(tidyr)
+
+
+long_data <- df[, c("Disurie, preoperator", "Disurie,3 luni",
+               "Disurie, 6 luni", "Disurie, 12 luni", "Tratament chirurgical")] %>%
+  pivot_longer(
+  cols = starts_with("Disurie"),
+  names_to = "Disurie",
+  values_to = "Value"
+)
+
+#long_data
+
+ggplot(long_data, aes(x = Disurie, y = Value)) +
+  geom_bar(
+    aes(y = ..prop.., group = 1),
+    stat = "identity", color = "white",
+    position = position_dodge(0.9)
+    )+
+  facet_wrap(~'Tratament chirurgical')
+
+
+
+
+
+```
+
+
+
+
+
+
+
