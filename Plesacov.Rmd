@@ -167,20 +167,44 @@ for (i in names(df[, 66:93])  ) {
   
 }
 
-# Sample data frame with a column
-data <- data.frame(
-  ID = 1:5,
-  Value = c(5, 5, 5, 5, 5)
-)
 
-# Check if the 'Value' column is constant
-is_constant <- all(data$Value == data$Value[1])
+# Inf in CI means that there is no way to estimate OR
 
-if (is_constant) {
-  cat("The 'Value' column is constant.\n")
-} else {
-  cat("The 'Value' column is not constant.\n")
-}
+```
+
+
+# Outcomes tables
+
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "Disurie, preoperator", "Disurie,3 luni", "Disurie, 6 luni", "Disurie, 12 luni")  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
+
+# Error because it is not possible to estimate significance for constant variables
+
+```
+
+
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "PZ, preoperator", "PZ, 3 luni", "PZ, 6 luni", "PZ, 12 luni")  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
 
 
 
@@ -188,7 +212,82 @@ if (is_constant) {
 
 
 
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "PN, preoperator", "PN, 3 luni", "PN, 6 luni", "PN, 12 luni")  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
 
 
+
+```
+
+
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "GI, preoperator", "GI, 3 luni",  "GI, 6 luni", "GI, 12 luni" )  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
+
+# Error because it is not possible to estimate significance for constant variables
+
+```
+                              
+
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "UM, preoperator", "UM, 3 luni", "UM, 6 luni", "UM, 12 luni")  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
+
+# Error because it is not possible to estimate significance for constant variables
+
+```
+                               
+                            
+                              
+```{r, error = FALSE}
+
+df %>% 
+  select("Tratament chirurgical", "RAU, preoperator", "RAU, 3 luni", "RAU, 6 luni", "RAU, 12 luni" )  %>%
+  tbl_summary(by = "Tratament chirurgical",
+              statistic = list(all_categorical() ~ "{n} ({p}%)",
+                               all_continuous() ~ "{mean} ({sd})\n {median} ({IQR})\n {min} {max} "),
+              digits = list(all_categorical() ~ c(0, 1),
+                            all_continuous()  ~ c(1, 1))) %>%
+  modify_header(label = "**Variable**") %>%
+  modify_caption("Participant characteristics") %>%
+  bold_labels()%>%add_ci()%>%add_p()
+
+# Error because it is not possible to estimate significance for constant variables
+
+```
+
+                              
+
+
+
+   
 
 
